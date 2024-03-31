@@ -7,7 +7,14 @@ app.route('/api/v1',routes)
 
 app.get('/', async(c) => {
   
-  return c.text("g")
+  return c.text("Hello from Blog")
+})
+
+
+
+app.get('/health', async(c) => {
+  
+  return c.text("All Goood")
 })
 
 
