@@ -15,8 +15,7 @@ const blog = new Hono<{
     }
 }>()
 
-
-blog.use(async(c:Context,next:Next) => {
+const auth = async(c:Context,next:Next) => {
     const {JWT_SECRET} = env<{JWT_SECRET:string}>(c)
     const bearer = c.req.header("Authorization")
     if(!bearer) return response(c,"Not Authorized",401)
@@ -24,11 +23,10 @@ blog.use(async(c:Context,next:Next) => {
     if(!token) return response(c,"Not Authorized",401)
 
     const {id} = await verify(token,JWT_SECRET)
-    c.set("userIdd",id)
+    c.set("userId",id)
     await next()
 }
-)
-blog.post("/",createBlog).put(updateBlog)
+blog.post("/",auth,createBlog).put(updateBlog)
 blog.get("/bulk",getBlogsBulk)
 blog.get("/:blogId",getBlog)
 
