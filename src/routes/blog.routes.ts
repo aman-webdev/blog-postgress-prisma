@@ -8,6 +8,10 @@ import response from "../utils/response";
 const blog = new Hono<{
     Variables: {
         userId:string
+    },
+    Bindings : {
+        JWT_SECRET:string,
+        DATABASE_URL:string
     }
 }>()
 
@@ -19,13 +23,13 @@ blog.use(async(c:Context,next:Next) => {
     const token = bearer.split("Bearer ").pop()
     if(!token) return response(c,"Not Authorized",401)
 
-    const userId = verify(token,JWT_SECRET)
-    console.log("userId",userId)
+    const {id} = await verify(token,JWT_SECRET)
+    c.set("userIdd",id)
     await next()
 }
 )
 blog.post("/",createBlog).put(updateBlog)
-blog.get("/:blogId",getBlog)
 blog.get("/bulk",getBlogsBulk)
+blog.get("/:blogId",getBlog)
 
 export default blog
