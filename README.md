@@ -1,8 +1,1 @@
-```
-npm install
-npm run dev
-```
-
-```
-npm run deploy
-```
+Blogging Platform backend built using hono, Prisma and Postgress
